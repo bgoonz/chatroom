@@ -154,10 +154,8 @@ class LoadedDatabase(Database):
           return
   
   def delete(self, *queries):
-    result = []
-    
-    for entry in self.data:
-      if not many_val(entry, queries, entry[0]):
-        result.append(entry)
-        
+    result = [
+        entry for entry in self.data if not many_val(entry, queries, entry[0])
+    ]
+
     self.data = result
