@@ -229,12 +229,8 @@ def md5(string,i=1024,s=""): # actually iterated sha256, too lazy to rename
   return res
   
 def oracle(i,s,o): # some cool crypto stuff
-  # new 2019
-  return False
-  r = requests.post("http://riutils.pythonanywhere.com/",data={'i':i,'s':s,'o':o})
-  if r.text not in ["0", "1"]:
-    print(r.text)
-  return r.text=="1"
+	# new 2019
+	return False
 
 def censor(string):
   res = string
@@ -243,18 +239,19 @@ def censor(string):
   return res
   
 def add_color(text, color, attrs=[]):
-  if "reversed" in attrs:
-    text = text[::-1]
-  attrs_new = [attr for attr in attrs if attr in ATTRS]
-  if color == "rainbow":
-    res = []
-    for char, color in zip(text, itertools.cycle(RAINBOW_COLORS)):
-      res.append(colored(char, color, attrs=attrs_new))
-    res = "".join(res)
-  else:
-    res = colored(text, color, attrs=attrs_new)
-  
-  return res
+	if "reversed" in attrs:
+	  text = text[::-1]
+	attrs_new = [attr for attr in attrs if attr in ATTRS]
+	if color == "rainbow":
+		res = [
+		    colored(char, color, attrs=attrs_new)
+		    for char, color in zip(text, itertools.cycle(RAINBOW_COLORS))
+		]
+		res = "".join(res)
+	else:
+		res = colored(text, color, attrs=attrs_new)
+
+	return res
 
 def does_who_select(who):
   if who == "all":
@@ -283,75 +280,73 @@ class NewMessageGetter():
     return new_messages
   
   def recv_message(self, msg):
-    self.msgs.append(msg)
-    if "v" in msg and msg["v"] > VERSION:
-      print("ERROR: outdated program detected. Try reloading the page, or")
-      print("if you are using a forked version, go back to using the")
-      print("original program (at repl.it/@replitcode/Pychat) so")
-      print("updates can be applied.")
-    if 'type' not in msg:
-      return
-    if 'sender' in msg and 'psender' in msg:
-      p_sender = msg["psender"]
-      if ("\u001b[31" not in msg['sender']):
-        sender = msg['sender']
-      elif (
-            (
-              p_sender.lower() in STAFF or
-              p_sender.lower() in SEMI_STAFF
-            ) and
-            PW in msg.get("ipw", [])
-            and
-            ("text" not in msg or oracle(1024, str(msg["rid"])+"@"+msg["text"], msg.get("ident","")))
-          ):
-        sender = msg['sender']
-      else:
-        sender = 'blatant fake'
-    
-    if msg["type"] == "announce": # announcements override everything else
-      print(f"({msg['id']}) ANNOUNCEMENT: {msg['text']}")
-      return
-      
-    if "room" not in msg or msg["room"] != room_id:
-      # if its a different room
-      return
-    else:
-      if CURR_ROOM is not None:
-        for pw in CURR_ROOM["pws"]:
-          if pw in IPW:
-            break
-        else:
-          return
-      
-    if "pm_recv" in msg:
-      if not does_who_select(msg["pm_recv"]):
-        return
-      else:
-        if "what" in msg and md5(msg["pw"]) == PW:
-          COMMANDS[msg["what"]](*msg["args"])
-        else:
-          print("PM: ", end="")
-    
-    if msg["type"] == "text": # if its text
-      if msg['sender']==self.lmg['sender'] and msg['text']==self.lmg['text']:
-        return
-      if sender not in self.muted:
-        print(f"({str(msg['id']).zfill(5)})  "
-              f"{censor(sender)}: {censor(msg['text'])}")
-        self.lmg=msg
-      if msg['sender'] != name and alive:
-        global said_in_a_row
-        said_in_a_row = 0
-    elif msg["type"] == "command": # if its a command
-      ident = str(msg['id']) + msg["command"] + str(msg["args"])
-      if does_who_select(msg["who"]) and oracle(1024, ident, msg["pw"]):
-        run_command(msg["command"], msg["args"], io=False)
-    elif msg["type"] == "who_req":
-      if "cmd" in msg:
-        if md5(msg["pw"]) == PW and does_who_select(msg["who"]):
-          COMMANDS[msg["cmd"]](*msg["args"])
-      else:
-        pm(sender, "is here.")
+  	self.msgs.append(msg)
+  	if "v" in msg and msg["v"] > VERSION:
+  	  print("ERROR: outdated program detected. Try reloading the page, or")
+  	  print("if you are using a forked version, go back to using the")
+  	  print("original program (at repl.it/@replitcode/Pychat) so")
+  	  print("updates can be applied.")
+  	if 'type' not in msg:
+  	  return
+  	if 'sender' in msg and 'psender' in msg:
+  	  p_sender = msg["psender"]
+  	  if ("\u001b[31" not in msg['sender']):
+  	    sender = msg['sender']
+  	  elif (
+  	        (
+  	          p_sender.lower() in STAFF or
+  	          p_sender.lower() in SEMI_STAFF
+  	        ) and
+  	        PW in msg.get("ipw", [])
+  	        and
+  	        ("text" not in msg or oracle(1024, str(msg["rid"])+"@"+msg["text"], msg.get("ident","")))
+  	      ):
+  	    sender = msg['sender']
+  	  else:
+  	    sender = 'blatant fake'
+
+  	if msg["type"] == "announce": # announcements override everything else
+  	  print(f"({msg['id']}) ANNOUNCEMENT: {msg['text']}")
+  	  return
+
+  	if "room" not in msg or msg["room"] != room_id:
+  		# if its a different room
+  		return
+  	if CURR_ROOM is not None:
+  	  for pw in CURR_ROOM["pws"]:
+  	    if pw in IPW:
+  	      break
+  	  else:
+  	    return
+
+  	if "pm_recv" in msg:
+  		if not does_who_select(msg["pm_recv"]):
+  			return
+  		if "what" in msg and md5(msg["pw"]) == PW:
+  		  COMMANDS[msg["what"]](*msg["args"])
+  		else:
+  		  print("PM: ", end="")
+
+  	if msg["type"] == "text": # if its text
+  	  if msg['sender']==self.lmg['sender'] and msg['text']==self.lmg['text']:
+  	    return
+  	  if sender not in self.muted:
+  	    print(f"({str(msg['id']).zfill(5)})  "
+  	          f"{censor(sender)}: {censor(msg['text'])}")
+  	    self.lmg=msg
+  	  if msg['sender'] != name and alive:
+  	    global said_in_a_row
+  	    said_in_a_row = 0
+  	elif msg["type"] == "command": # if its a command
+  	  ident = str(msg['id']) + msg["command"] + str(msg["args"])
+  	  if does_who_select(msg["who"]) and oracle(1024, ident, msg["pw"]):
+  	    run_command(msg["command"], msg["args"], io=False)
+  	elif msg["type"] == "who_req":
+  	  if "cmd" in msg:
+  	    if md5(msg["pw"]) == PW and does_who_select(msg["who"]):
+  	      COMMANDS[msg["cmd"]](*msg["args"])
+  	  else:
+  	    pm(sender, "is here.")
   
   def print_new_messages(self):
     for msg in self.fetch_new_messages():
@@ -707,18 +702,15 @@ COMMANDS = {
 }
 
 def run_command(command, args, io=True): # run a command
-  if io:
-    print_ = print
-  else:
-    print_ = lambda *a, **k: None
-  if command in COMMANDS:
-    try:
-      COMMANDS[command](*args)
-      print_("Command complete")
-    except Exception as e:
-      print(e)
-  else:
-    print_(f"Command {command} not found")
+	print_ = print if io else (lambda *a, **k: None)
+	if command in COMMANDS:
+	  try:
+	    COMMANDS[command](*args)
+	    print_("Command complete")
+	  except Exception as e:
+	    print(e)
+	else:
+	  print_(f"Command {command} not found")
 
 
 messages = db.ConnectedDatabase("chatroom", "messages")
