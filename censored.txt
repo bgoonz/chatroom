@@ -1,0 +1,113 @@
+THATS RIGHT GUYS A GIANT BLOCK OF CURSE WORDS DEAL WITH IT
+THE BANNER FOR A GIANT BLOCK OF CURSE WORDS
+
+THIS IS FOR CENSORING
+THIS IS FOR CENSORING
+
+porn
+intercourse videos
+
+(.+) fucker
+engager in intercourse with \1
+
+fucker
+engager in intercourse
+
+fu[ck][ck](.*) (.+)
+engage\1 in intercourse with \2
+
+fuck
+engage in intercourse
+
+shit
+brown bum juice
+
+asshole
+bumcrack
+
+cunt
+genital
+
+pussy
+cat
+
+twat
+nun hat
+
+penis
+pen
+
+vagina
+the pee part
+
+dick
+richard
+
+dicc
+richard
+
+nigger
+human
+
+nigga
+human
+
+damn
+go to hell
+
+dammit
+go to hell
+
+hell([^o])
+a burny fire place\1
+
+fag
+flag
+
+sex
+intercourse
+
+titties
+chest jello
+
+tits
+chest jello
+
+tit
+chest jello
+
+boobies
+chest jello
+
+boob
+chest jello
+
+nipple
+pointy chest jello
+
+dont ask about the chest jello
+dont ask about the chest jello
+
+bitch
+doggo
+
+arse
+bum
+
+twat
+genital
+
+whore
+human
+
+slut
+human
+
+69
+√4761
+
+flop
+test word
+
+emoji movie
+unspeakable horror
